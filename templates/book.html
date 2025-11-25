@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ book.title }}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --sidebar-bg: #0f172a;
+            /* Match canvas background color */
+            --text-primary: #f5e6d3;
+            --text-secondary: #d4a574;
+            --sidebar-text: #f5e6d3;
+            --sidebar-text-secondary: #d4a574;
+            --accent: #8b5cf6;
+            --border-color: #e2e8f0;
+        }
+
+        body {
+            background: var(--bg-color);
+            color: var(--text-primary);
+            font-family: 'Outfit', sans-serif;
+            display: flex;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .sidebar {
+            width: 25%;
+            min-width: 250px;
+            max-width: 400px;
+            background: var(--sidebar-bg);
+            border-right: 1px solid red;
+            /* Red dividing line */
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            color: var(--sidebar-text);
+            transition: width 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .sidebar-header h2 {
+            margin: 0 0 10px 0;
+            font-size: 1.5em;
+            color: var(--accent);
+        }
+
+        .back-link {
+            color: var(--sidebar-text-secondary);
+            text-decoration: none;
+            font-size: 0.9em;
+            transition: color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .back-link:hover {
+            color: var(--sidebar-text);
+        }
+
+        .chapters-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        /* Scrollbar styling */
+        .chapters-list::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .chapters-list::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .chapters-list::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.98);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .chapter {
+            margin-bottom: 8px;
+            border-radius: 8px;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid transparent;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .chapter:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.1);
+            transform: translateX(5px);
+        }
+
+        .chapter-header {
+            padding: 12px 15px;
+            cursor: pointer;
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chapter-title {
+            font-weight: 500;
+            font-size: 0.95em;
+            flex: 1;
+            padding-right: 10px;
+            color: #60a5fa;
+            /* Lighter blue for readability on dark bg */
+        }
+
+        /* Custom Animated Checkbox */
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        input[type="checkbox"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--sidebar-text-secondary);
+            border-radius: 50%;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        input[type="checkbox"]:checked {
+            background-color: var(--accent);
+            border-color: var(--accent);
+            transform: scale(1.1);
+        }
+
+        input[type="checkbox"]:checked::after {
+            content: '✓';
+            position: absolute;
+            color: white;
+            font-size: 12px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        input[type="checkbox"]:hover {
+            border-color: var(--accent);
+        }
+
+        .sections {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0, 1, 0, 1);
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .sections.active {
+            max-height: 1000px;
+            transition: max-height 0.6s ease-in-out;
+        }
+
+        .section-item {
+            padding: 8px 15px 8px 30px;
+            cursor: pointer;
+            font-size: 0.9em;
+            color: var(--sidebar-text-secondary);
+            border-left: 2px solid transparent;
+            transition: all 0.2s;
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-item:hover {
+            color: var(--sidebar-text);
+            background: rgba(255, 255, 255, 0.05);
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            animation: fadeIn 0.8s ease-out;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: url('/static/images/background.jpg') no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        #player-container {
+            flex: 1;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .placeholder-text {
+            color: orange;
+            font-size: 1.2em;
+            font-weight: bold;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            animation: fadeIn 1s ease-out;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <a href="/library" class="back-link">&larr; Back to Library</a>
+                <a href="/contact"
+                    style="color: var(--sidebar-text); text-decoration: none; font-size: 0.9em; transition: all 0.2s; background: rgba(255, 255, 255, 0.1); padding: 6px 12px; border-radius: 6px; display: flex; align-items: center; gap: 6px; border: 1px solid rgba(255, 255, 255, 0.1);"
+                    onmouseover="this.style.background='rgba(255, 255, 255, 0.2)'; this.style.borderColor='var(--accent)';"
+                    onmouseout="this.style.background='rgba(255, 255, 255, 0.1)'; this.style.borderColor='rgba(255, 255, 255, 0.1)';">
+                    <span style="font-size: 1.1em;">✉</span> Contact
+                </a>
+            </div>
+            <h2>{{ book.title }}</h2>
+        </div>
+
+        <div class="chapters-list">
+            {% for chapter in book.chapters %}
+            <div class="chapter" data-chapter-id="{{ chapter.id }}">
+                <div class="chapter-header" onclick="toggleChapter(this)">
+                    <div class="chapter-title">{{ chapter.title }}</div>
+                    <div class="checkbox-wrapper">
+                        <input type="checkbox" {% if chapter.completed %}checked{% endif %}
+                            onclick="toggleComplete(event, '{{ book.id }}', '{{ chapter.id }}')"
+                            title="Mark as complete">
+                    </div>
+                </div>
+                <div class="sections">
+                    <div class="section-item" onclick="playVideo('{{ chapter.id }}', 0)">
+                        <span style="opacity:0.7">▶</span> Start from beginning
+                    </div>
+                    {% for section in chapter.sections %}
+                    <div class="section-item" onclick="playVideo('{{ chapter.id }}', {{ section.seconds }})">
+                        <span style="font-family: monospace; opacity: 0.7; margin-right: 8px;">{{ section.start
+                            }}</span>
+                        {{ section.title }}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="content">
+        <div id="player-container">
+            <div class="placeholder-text">
+                <div style="font-size: 3em; opacity: 0.2;">▶</div>
+                Select a chapter or section to start watching
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleChapter(element) {
+            const sections = element.nextElementSibling;
+            sections.classList.toggle('active');
+        }
+
+        function playVideo(videoId, startSeconds) {
+            const container = document.getElementById('player-container');
+            let src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`;
+            if (startSeconds) {
+                src += `&start=${startSeconds}`;
+            }
+            container.innerHTML = `<iframe src="${src}" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+        }
+
+        function toggleComplete(event, bookId, chapterId) {
+            event.stopPropagation(); // Prevent toggling the accordion
+            const completed = event.target.checked;
+
+            fetch('/api/progress', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    book_id: bookId,
+                    chapter_id: chapterId,
+                    completed: completed
+                }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        console.log('Progress updated:', data.progress);
+                    } else {
+                        alert('Failed to update progress');
+                        event.target.checked = !completed; // Revert
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred');
+                    event.target.checked = !completed; // Revert
+                });
+        }
+    </script>
+</body>
+
+</html>

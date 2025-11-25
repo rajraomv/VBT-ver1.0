@@ -1,0 +1,12 @@
+--- EMAIL SIMULATION (Config Missing) ---
+
+    Name: lk
+    Email: lk@l.com
+    Phone: N/A
+    WhatsApp: N/A
+    
+    Feedback:
+    lk ok msg
+
+    
+-----------------------------------------

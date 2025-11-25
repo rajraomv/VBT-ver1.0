@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Divine Library</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-primary: #f5e6d3;
+            --text-secondary: #d4a574;
+            --accent: #8b5cf6;
+            --accent-glow: rgba(139, 92, 246, 0.5);
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: url('/static/images/background.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: var(--text-primary);
+            margin: 0;
+            padding: 40px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 2.5em;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .book-card {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 180px;
+            animation: fadeInUp 0.6s ease-out backwards;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Staggered animation delays */
+        .book-card:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .book-card:nth-child(2) {
+            animation-delay: 0.15s;
+        }
+
+        .book-card:nth-child(3) {
+            animation-delay: 0.2s;
+        }
+
+        .book-card:nth-child(4) {
+            animation-delay: 0.25s;
+        }
+
+        .book-card:nth-child(5) {
+            animation-delay: 0.3s;
+        }
+
+        .book-card:nth-child(n+6) {
+            animation-delay: 0.35s;
+        }
+
+        .book-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 15px var(--accent-glow);
+            border-color: var(--accent);
+            background: #2e3b4e;
+        }
+
+        .book-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+            transform: translateX(-100%);
+            transition: 0.5s;
+        }
+
+        .book-card:hover::after {
+            transform: translateX(100%);
+        }
+
+        .book-title {
+            font-size: 1.4em;
+            font-weight: 600;
+            margin-bottom: 15px;
+            line-height: 1.3;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .progress-section {
+            margin-top: auto;
+        }
+
+        .progress-container {
+            background: rgba(255, 255, 255, 0.1);
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, #8b5cf6, #d946ef);
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s ease-out;
+            box-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        .stats {
+            font-size: 0.85em;
+            color: var(--text-secondary);
+            text-align: right;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <a href="/" style="color: var(--text-secondary); text-decoration: none;">&larr; Home</a>
+            <a href="/contact"
+                style="color: var(--text-primary); text-decoration: none; font-size: 0.9em; transition: all 0.2s; background: rgba(255, 255, 255, 0.1); padding: 6px 12px; border-radius: 6px; display: flex; align-items: center; gap: 6px; border: 1px solid rgba(255, 255, 255, 0.1);"
+                onmouseover="this.style.background='rgba(255, 255, 255, 0.2)'; this.style.borderColor='#8b5cf6';"
+                onmouseout="this.style.background='rgba(255, 255, 255, 0.1)'; this.style.borderColor='rgba(255, 255, 255, 0.1)';">
+                <span style="font-size: 1.1em;">✉</span> Contact Us
+            </a>
+        </div>
+        <h1>My Video Library</h1>
+        <div class="grid">
+            {% for book in books %}
+            <a href="/book/{{ book.id }}" class="book-card">
+                <div class="book-title">{{ book.title }}</div>
+                <div class="progress-section">
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: {{ book.total_progress }}%"></div>
+                    </div>
+                    <div class="stats">{{ book.total_progress|round|int }}% Complete</div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+        {% if not books %}
+        <div class="empty-state">
+            <p>Your library is empty.</p>
+            <p style="font-size: 0.9em; opacity: 0.7;">Use the Admin Tool to add some playlists!</p>
+        </div>
+        {% endif %}
+    </div>
+</body>
+
+</html>

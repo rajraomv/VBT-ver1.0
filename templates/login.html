@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+color: var(--text-primary);
+margin: 0;
+padding: 40px;
+min-height: 100vh;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+
+.login-card {
+background: rgba(30, 41, 59, 0.9);
+padding: 40px;
+border-radius: 16px;
+box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+width: 100%;
+max-width: 400px;
+backdrop-filter: blur(10px);
+border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+h1 {
+text-align: center;
+margin-bottom: 30px;
+color: var(--accent);
+}
+
+.form-group {
+margin-bottom: 20px;
+}
+
+label {
+display: block;
+margin-bottom: 8px;
+color: var(--text-secondary);
+}
+
+input[type="password"] {
+width: 100%;
+padding: 12px;
+background: rgba(255, 255, 255, 0.05);
+border: 1px solid rgba(255, 255, 255, 0.1);
+border-radius: 8px;
+color: var(--text-primary);
+font-family: inherit;
+box-sizing: border-box;
+}
+
+input[type="password"]:focus {
+outline: none;
+border-color: var(--accent);
+}
+
+button {
+width: 100%;
+background: var(--accent);
+color: white;
+border: none;
+padding: 12px;
+border-radius: 8px;
+cursor: pointer;
+font-family: inherit;
+font-weight: 600;
+font-size: 1em;
+transition: background 0.2s;
+}
+
+button:hover {
+background: var(--accent-hover);
+}
+
+.error-message {
+color: #ef4444;
+text-align: center;
+margin-bottom: 20px;
+font-size: 0.9em;
+}
+</style>
+</head>
+
+<body>
+    <div class="login-card">
+        <h1>Admin Login</h1>
+        {% if error %}
+        <div class="error-message">{{ error }}</div>
+        {% endif %}
+        <form method="POST">
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required autofocus>
+            </div>
+            <button type="submit">Login</button>
+        </form>
+        <div style="text-align: center; margin-top: 20px;">
+            <a href="/" style="color: var(--text-secondary); text-decoration: none; font-size: 0.9em;">&larr; Back to
+                Library</a>
+        </div>
+    </div>
+</body>
+
+</html>
