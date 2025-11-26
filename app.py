@@ -242,7 +242,7 @@ def handle_contact():
     if send_email(subject, body):
         flash('Your message has been sent successfully!', 'success')
     else:
-        flash(f'Message saved to database/logs. (Email not configured)', 'success')
+        flash('Thank you! We have received your message and will respond soon.', 'success')
 
     return redirect(url_for('contact_view'))
 
