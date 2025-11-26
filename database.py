@@ -95,3 +95,37 @@ def mongo_save_library(library_data):
     for book in library_data.get('books', []):
         mongo_save_book(book)
     return True
+
+def mongo_save_feedback(feedback_data):
+    """
+    Saves a feedback/contact message to the 'feedback' collection.
+    """
+    db = get_db()
+    if db is None:
+        return False
+    
+    # Add a timestamp if not present (though app.py usually handles this, good to be safe)
+    if 'timestamp' not in feedback_data:
+        from datetime import datetime
+        feedback_data['timestamp'] = datetime.now().isoformat()
+
+    db.feedback.insert_one(feedback_data)
+    return True
+
+def mongo_get_all_feedback():
+    """
+    Retrieves all feedback messages, sorted by newest first.
+    """
+    db = get_db()
+    if db is None:
+        return []
+    
+    # Sort by _id descending (newest first) naturally, or use timestamp if available
+    feedback_list = list(db.feedback.find().sort('_id', -1))
+    
+    # Clean up _id for frontend usage
+    for item in feedback_list:
+        if '_id' in item:
+            item['_id'] = str(item['_id'])
+            
+    return feedback_list

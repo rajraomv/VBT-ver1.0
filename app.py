@@ -9,6 +9,10 @@ import smtplib
 import ssl
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from dotenv import load_dotenv
+
+load_dotenv()  # Load environment variables from .env file
+print(f"DEBUG: MONGO_URI is set: {'MONGO_URI' in os.environ}")
 
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', 'dev_secret_key')
@@ -54,23 +58,35 @@ def admin_view():
     
     # Load recent contact messages
     messages = []
-    log_dir = 'email_logs'
-    if os.path.exists(log_dir):
-        log_files = sorted(
-            [f for f in os.listdir(log_dir) if f.startswith('email_') and f.endswith('.txt')],
-            reverse=True
-        )[:10]  # Get 10 most recent
-        
-        for filename in log_files:
-            try:
-                with open(os.path.join(log_dir, filename), 'r') as f:
-                    content = f.read()
-                    messages.append({
-                        'filename': filename,
-                        'content': content
-                    })
-            except Exception as e:
-                print(f"Error reading {filename}: {e}")
+    
+    # Try MongoDB first
+    if os.environ.get('MONGO_URI'):
+        try:
+            from database import mongo_get_all_feedback
+            messages = mongo_get_all_feedback()
+        except Exception as e:
+            print(f"Error fetching feedback from MongoDB: {e}")
+            
+    # If no messages from MongoDB (or not connected), try local files
+    if not messages:
+        log_dir = 'email_logs'
+        if os.path.exists(log_dir):
+            log_files = sorted(
+                [f for f in os.listdir(log_dir) if f.startswith('email_') and f.endswith('.txt')],
+                reverse=True
+            )[:10]  # Get 10 most recent
+            
+            for filename in log_files:
+                try:
+                    with open(os.path.join(log_dir, filename), 'r') as f:
+                        content = f.read()
+                        messages.append({
+                            'filename': filename,
+                            'content': content,
+                            'timestamp': filename.replace('email_', '').replace('.txt', '')
+                        })
+                except Exception as e:
+                    print(f"Error reading {filename}: {e}")
     
     return render_template('admin.html', books=library['books'], messages=messages)
 
@@ -175,11 +191,30 @@ def handle_contact():
     Feedback:
     {feedback}
     """
+    
+    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-    # Always log to console (visible in Render logs)
+    # 1. Save to MongoDB (if available)
+    if os.environ.get('MONGO_URI'):
+        try:
+            from database import mongo_save_feedback
+            feedback_data = {
+                'name': name,
+                'email': email,
+                'phone': phone,
+                'whatsapp': whatsapp,
+                'feedback': feedback,
+                'timestamp': timestamp
+            }
+            mongo_save_feedback(feedback_data)
+            print("Saved feedback to MongoDB.")
+        except Exception as e:
+            print(f"Error saving to MongoDB: {e}")
+
+    # 2. Always log to console (visible in Render logs)
     print("="*50, file=sys.stderr)
     print("NEW CONTACT FORM SUBMISSION", file=sys.stderr)
-    print(f"Date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}", file=sys.stderr)
+    print(f"Date: {timestamp}", file=sys.stderr)
     print(f"Name: {name}", file=sys.stderr)
     print(f"Email: {email}", file=sys.stderr)
     print(f"Phone: {phone or 'N/A'}", file=sys.stderr)
@@ -187,27 +222,27 @@ def handle_contact():
     print(f"Feedback:\n{feedback}", file=sys.stderr)
     print("="*50, file=sys.stderr)
     
-    # Also save to log file (for local development)
+    # 3. Also save to log file (for local development backup)
     log_dir = 'email_logs'
     if not os.path.exists(log_dir):
         os.makedirs(log_dir)
         
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    filename = f"email_{timestamp}.txt"
+    file_timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    filename = f"email_{file_timestamp}.txt"
     filepath = os.path.join(log_dir, filename)
     
     try:
         with open(filepath, 'w') as f:
-            f.write(f"Date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+            f.write(f"Date: {timestamp}\n")
             f.write(body + "\n")
     except Exception as e:
         print(f"Error saving log file: {e}", file=sys.stderr)
 
-    # Attempt to send email
+    # 4. Attempt to send email
     if send_email(subject, body):
         flash('Your message has been sent successfully!', 'success')
     else:
-        flash(f'Message saved to internal logs (Simulation Mode). Real email requires config.', 'success')
+        flash(f'Message saved to database/logs. (Email not configured)', 'success')
 
     return redirect(url_for('contact_view'))
 
