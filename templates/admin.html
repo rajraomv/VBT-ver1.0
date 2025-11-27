@@ -151,7 +151,7 @@
             style="color: var(--text-secondary); text-decoration: none; display: inline-block; margin-bottom: 20px;">&larr;
             Back to Library</a>
 
-        <!-- Header with Status Indicator -->
+        <!-- Header with Status Indicator (Updated) -->
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 30px;">
             <h1 style="margin: 0;">Admin Dashboard</h1>
             <div
@@ -165,7 +165,8 @@
             </div>
         </div>
 
-        <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div class="card">
+            <h2>Add New Book</h2>
             <div class="form-group">
                 <label for="playlistUrl">YouTube Playlist URL</label>
                 <input type="text" id="playlistUrl" placeholder="https://www.youtube.com/playlist?list=...">
@@ -239,7 +240,6 @@
             <p style="color: var(--text-secondary); text-align: center; padding: 20px;">No messages yet.</p>
             {% endif %}
         </div>
-    </div>
     </div>
 
     <script>
