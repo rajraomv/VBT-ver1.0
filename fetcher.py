@@ -9,7 +9,10 @@ def fetch_playlist_info(url):
     ydl_opts = {
         'quiet': True,
         'ignoreerrors': True,
-        'skip_download': True,  # we only need metadata, not video files
+        'skip_download': True,
+        'no_warnings': True,
+        'extract_flat': 'in_playlist', # Much faster, only gets metadata
+        'user_agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
     }
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         try:
