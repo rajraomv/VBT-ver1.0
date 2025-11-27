@@ -1,0 +1,163 @@
+{
+    "books": [
+        {
+            "id": "36e7fe27-347c-4635-8a5c-62b532d7c5c3",
+            "title": "Sri Shirdi Sai Satakamu",
+            "playlist_url": "https://www.youtube.com/playlist?list=PL9gxcZRzzlsYglfIGleXHoYHnI9hUmbJ9",
+            "chapters": [
+                {
+                    "id": "qV4hDYls1Jk",
+                    "title": "Sri Sai Satakamu -  A Brief Introduction",
+                    "url": "https://www.youtube.com/watch?v=qV4hDYls1Jk",
+                    "duration": 168,
+                    "sections": [],
+                    "completed": true
+                },
+                {
+                    "id": "RBbR3ABl8w8",
+                    "title": "Sri Sai Satakamu 1. Daiva Prarthana",
+                    "url": "https://www.youtube.com/watch?v=RBbR3ABl8w8",
+                    "duration": 357,
+                    "sections": []
+                },
+                {
+                    "id": "qRLgC7IWZko",
+                    "title": "Sri Sai Satakamu 2. Sri Sai Stotramu - Part 1of2",
+                    "url": "https://www.youtube.com/watch?v=qRLgC7IWZko",
+                    "duration": 505,
+                    "sections": []
+                },
+                {
+                    "id": "ggJyqZtNDUs",
+                    "title": "Sri Sai Satakamu 2. Sri Sai Stotramu - Part 2of2",
+                    "url": "https://www.youtube.com/watch?v=ggJyqZtNDUs",
+                    "duration": 497,
+                    "sections": []
+                },
+                {
+                    "id": "LtiWYzSDmP0",
+                    "title": "Sri Sai Satakamu 3. Sri Sai Suktulu",
+                    "url": "https://www.youtube.com/watch?v=LtiWYzSDmP0",
+                    "duration": 419,
+                    "sections": []
+                },
+                {
+                    "id": "p-kkFVw6RBk",
+                    "title": "Sri Sai Satakamu . 4. Sri Sai Leelalu - Part 1of3",
+                    "url": "https://www.youtube.com/watch?v=p-kkFVw6RBk",
+                    "duration": 368,
+                    "sections": []
+                },
+                {
+                    "id": "pyej4YaoMhE",
+                    "title": "Sri Sai Satakamu . 4. Sri Sai Leelalu - Part 2of3",
+                    "url": "https://www.youtube.com/watch?v=pyej4YaoMhE",
+                    "duration": 355,
+                    "sections": []
+                },
+                {
+                    "id": "F0IBcjxHZVA",
+                    "title": "Sri Sai Satakamu... 4. Sri Sai Leelalu - Part 3of3",
+                    "url": "https://www.youtube.com/watch?v=F0IBcjxHZVA",
+                    "duration": 381,
+                    "sections": []
+                },
+                {
+                    "id": "6egUesMoW1c",
+                    "title": "Sri Sai Satakamu 5. Kavi Prabodhamulu",
+                    "url": "https://www.youtube.com/watch?v=6egUesMoW1c",
+                    "duration": 474,
+                    "sections": []
+                },
+                {
+                    "id": "Cj5P1ehuP_4",
+                    "title": "Sri Sai Satakamu   6. Mangala Harathulu",
+                    "url": "https://www.youtube.com/watch?v=Cj5P1ehuP_4",
+                    "duration": 560,
+                    "sections": [
+                        {
+                            "start": "0:00",
+                            "title": "Start / Announcement",
+                            "seconds": 0
+                        },
+                        {
+                            "start": "0:12",
+                            "title": "Mangala Harathulu poems",
+                            "seconds": 12
+                        },
+                        {
+                            "start": "7:00",
+                            "title": "Conclusion",
+                            "seconds": 420
+                        }
+                    ]
+                }
+            ],
+            "total_progress": 10
+        },
+        {
+            "id": "5645a762-eb9a-43e7-82b8-ab6e28a3ad28",
+            "title": "Sri Tirumalendra Venkateswara Satakamu",
+            "playlist_url": "https://www.youtube.com/playlist?list=PL9gxcZRzzlsZ0B0bsiw9tYwz3gAHPCh2y",
+            "chapters": [
+                {
+                    "id": "TLt2gLf-WmY",
+                    "title": "\u0c36\u0c4d\u0c30\u0c40 \u0c24\u0c3f\u0c30\u0c41\u0c2e\u0c32\u0c47\u0c02\u0c26\u0c4d\u0c30 \u0c36\u0c24\u0c15\u0c2e\u0c41 - Sri Tirumalendra Satakamu - Intro and Prarthana",
+                    "url": "https://www.youtube.com/watch?v=TLt2gLf-WmY",
+                    "duration": 441,
+                    "sections": [
+                        {
+                            "start": "0:00",
+                            "title": "Introduction",
+                            "seconds": 0
+                        },
+                        {
+                            "start": "3:55",
+                            "title": "Prarthana",
+                            "seconds": 235
+                        }
+                    ]
+                },
+                {
+                    "id": "tP-BKX7Zc8E",
+                    "title": "2.1 \u0c36\u0c4d\u0c30\u0c40 \u0c24\u0c3f\u0c30\u0c41\u0c2e\u0c32\u0c47\u0c02\u0c26\u0c4d\u0c30 \u0c38\u0c4d\u0c24\u0c4b\u0c24\u0c4d\u0c30\u0c2e\u0c41 .. 2.1 Sri Tirumalendra Stotramu",
+                    "url": "https://www.youtube.com/watch?v=tP-BKX7Zc8E",
+                    "duration": 470,
+                    "sections": []
+                },
+                {
+                    "id": "r8q5YZ72u84",
+                    "title": "2.2 \u0c36\u0c4d\u0c30\u0c40 \u0c24\u0c3f\u0c30\u0c41\u0c2e\u0c32\u0c47\u0c02\u0c26\u0c4d\u0c30 \u0c38\u0c4d\u0c24\u0c4b\u0c24\u0c4d\u0c30\u0c2e\u0c41 .. 2.2 Sri Tirumalendra Stotramu",
+                    "url": "https://www.youtube.com/watch?v=r8q5YZ72u84",
+                    "duration": 464,
+                    "sections": []
+                },
+                {
+                    "id": "AVgSjXP95Cs",
+                    "title": "3. \u0c36\u0c4d\u0c30\u0c40\u0c35\u0c3e\u0c30\u0c3f \u0c35\u0c3f\u0c17\u0c4d\u0c30\u0c39 \u0c35\u0c3f\u0c1a\u0c3e\u0c30\u0c23 ...3. Srivari Vigraha Vicharana",
+                    "url": "https://www.youtube.com/watch?v=AVgSjXP95Cs",
+                    "duration": 305,
+                    "sections": []
+                },
+                {
+                    "id": "QMah07SiWN4",
+                    "title": "\u0c36\u0c4d\u0c30\u0c40 \u0c24\u0c3f\u0c30\u0c41\u0c2e\u0c32\u0c47\u0c02\u0c26\u0c4d\u0c30 \u0c36\u0c24\u0c15\u0c2e\u0c41 - 4. \u0c36\u0c4d\u0c30\u0c40\u0c35\u0c3e\u0c30\u0c3f \u0c2e\u0c42\u0c30\u0c4d\u0c24\u0c40 \u0c2e\u0c02\u0c24\u0c28\u0c2e\u0c41, Sri Tirumalendra Satakamu - 4. Srivari Moorthi",
+                    "url": "https://www.youtube.com/watch?v=QMah07SiWN4",
+                    "duration": 498,
+                    "sections": []
+                },
+                {
+                    "id": "enA0ZnCy9Mo",
+                    "title": "\u0c36\u0c4d\u0c30\u0c40 \u0c24\u0c3f\u0c30\u0c41\u0c2e\u0c32\u0c47\u0c02\u0c26\u0c4d\u0c30 \u0c36\u0c24\u0c15\u0c2e\u0c41 - 5. \u0c36\u0c4d\u0c30\u0c40\u0c35\u0c3e\u0c30\u0c3f \u0c38\u0c47\u0c35\u0c32\u0c41,  Sri Tirumalendra Satakamu - 5. Srivari Sevalu",
+                    "url": "https://www.youtube.com/watch?v=enA0ZnCy9Mo",
+                    "duration": 542,
+                    "sections": []
+                }
+            ],
+            "total_progress": 0
+        }
+    ],
+    "stats": {
+        "total_views": 2
+    }
+}

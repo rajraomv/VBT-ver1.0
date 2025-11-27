@@ -150,10 +150,22 @@
         <a href="/library"
             style="color: var(--text-secondary); text-decoration: none; display: inline-block; margin-bottom: 20px;">&larr;
             Back to Library</a>
-        <h1>Admin Dashboard</h1>
 
-        <div class="card">
-            <h2>Add New Book</h2>
+        <!-- Header with Status Indicator -->
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 30px;">
+            <h1 style="margin: 0;">Admin Dashboard</h1>
+            <div
+                style="display: flex; align-items: center; background: rgba(255,255,255,0.05); padding: 8px 16px; border-radius: 20px;">
+                <div
+                    style="width: 10px; height: 10px; border-radius: 50%; background-color: {% if db_connected %}#4ade80{% else %}#ef4444{% endif %}; margin-right: 8px; box-shadow: 0 0 10px {% if db_connected %}rgba(74, 222, 128, 0.5){% else %}rgba(239, 68, 68, 0.5){% endif %};">
+                </div>
+                <span style="font-size: 0.9em; color: var(--text-secondary); font-weight: 500;">
+                    {% if db_connected %}MongoDB Active{% else %}MongoDB Disconnected{% endif %}
+                </span>
+            </div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center;">
             <div class="form-group">
                 <label for="playlistUrl">YouTube Playlist URL</label>
                 <input type="text" id="playlistUrl" placeholder="https://www.youtube.com/playlist?list=...">
@@ -189,11 +201,37 @@
             <div style="max-height: 400px; overflow-y: auto;">
                 {% for msg in messages %}
                 <div style="padding: 15px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); margin-bottom: 10px;">
-                    <div style="font-size: 0.85em; color: var(--text-secondary); margin-bottom: 8px;">
-                        {{ msg.filename.replace('email_', '').replace('.txt', '') }}
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="font-size: 0.85em; color: var(--text-secondary);">
+                            {% if msg.timestamp %}
+                            {{ msg.timestamp }}
+                            {% elif msg.filename %}
+                            {{ msg.filename.replace('email_', '').replace('.txt', '') }}
+                            {% else %}
+                            Unknown Date
+                            {% endif %}
+                        </span>
+                        <span style="font-size: 0.85em; color: var(--accent);">
+                            {% if msg.email %}
+                            {{ msg.name }} ({{ msg.email }})
+                            {% else %}
+                            File Log
+                            {% endif %}
+                        </span>
                     </div>
-                    <pre
-                        style="white-space: pre-wrap; font-family: inherit; font-size: 0.9em; margin: 0; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 6px;">{{ msg.content }}</pre>
+                    <div style="background: rgba(0,0,0,0.2); padding: 10px; border-radius: 6px;">
+                        {% if msg.feedback %}
+                        <div style="font-size: 0.9em; margin-bottom: 5px; color: var(--text-secondary);">
+                            <strong>Phone:</strong> {{ msg.phone or 'N/A' }} | <strong>WhatsApp:</strong> {{
+                            msg.whatsapp or 'N/A' }}
+                        </div>
+                        <pre
+                            style="white-space: pre-wrap; font-family: inherit; font-size: 0.95em; margin: 0;">{{ msg.feedback }}</pre>
+                        {% else %}
+                        <pre
+                            style="white-space: pre-wrap; font-family: inherit; font-size: 0.95em; margin: 0;">{{ msg.content }}</pre>
+                        {% endif %}
+                    </div>
                 </div>
                 {% endfor %}
             </div>
@@ -201,6 +239,7 @@
             <p style="color: var(--text-secondary); text-align: center; padding: 20px;">No messages yet.</p>
             {% endif %}
         </div>
+    </div>
     </div>
 
     <script>
@@ -268,6 +307,7 @@
                 if (data.status === 'success') {
                     status.className = 'status-message success';
                     status.textContent = data.message;
+                    setTimeout(() => location.reload(), 2000);
                 } else {
                     status.className = 'status-message error';
                     status.textContent = 'Error: ' + data.message;

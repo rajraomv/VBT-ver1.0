@@ -88,7 +88,17 @@ def admin_view():
                 except Exception as e:
                     print(f"Error reading {filename}: {e}")
     
-    return render_template('admin.html', books=library['books'], messages=messages)
+    # Check DB connection status
+    db_connected = False
+    if os.environ.get('MONGO_URI'):
+        try:
+            from database import get_db
+            if get_db() is not None:
+                db_connected = True
+        except:
+            pass
+
+    return render_template('admin.html', books=library['books'], messages=messages, db_connected=db_connected)
 
 @app.route('/book/<book_id>')
 def book_view(book_id):
