@@ -7,6 +7,7 @@
     <title>Video Book Tracker</title>
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Outfit:wght@300;400;600;800&display=swap"
         rel="stylesheet">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon.png') }}">
     <style>
         body {
             font-family: 'Outfit', sans-serif;
@@ -150,11 +151,14 @@
 
 <body>
     <div class="container">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Tel-Lit Logo"
+            style="width: 150px; margin-bottom: 20px; animation: float 3s ease-in-out infinite;">
         <div class="namasthe">Namasthe! 🙏</div>
         <h1>Video Book Tracker</h1>
         <p>Enjoy the books from the library, audio visually, tracking your progress with full control!</p>
 
-        <a href="/library" class="btn btn-primary">Enter Library</a>
+        <a href="/library" class="btn btn-primary"
+            onclick="this.innerText='Loading Library...'; this.style.opacity='0.7';">Enter Library</a>
         <br>
 
         <a href="/contact" class="btn btn-contact">Contact Us</a>

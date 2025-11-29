@@ -88,6 +88,7 @@ def mongo_save_library(library_data):
     For MongoDB, we iterate and save each book.
     """
     db = get_db()
+    print(f"DEBUG: get_db() in mongo_save_library returned: {db}")
     if db is None:
         return False
     

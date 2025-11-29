@@ -1,6 +1,9 @@
 import uuid
+from dotenv import load_dotenv
 from storage import load_library, save_library, delete_book
 from fetcher import fetch_playlist_info, fetch_video_description, parse_sections
+
+load_dotenv()
 
 
 def add_book_logic(url, title=None):
@@ -51,8 +54,10 @@ def add_book_logic(url, title=None):
         'total_progress': 0
     }
     library.setdefault('books', []).append(new_book)
-    save_library(library)
-    return {"status": "success", "message": f"Book '{title}' added with {len(chapters)} chapters!"}
+    if save_library(library):
+        return {"status": "success", "message": f"Book '{title}' added with {len(chapters)} chapters!"}
+    else:
+        return {"status": "error", "message": "Failed to save book to database."}
 
 
 def add_book():

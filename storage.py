@@ -17,7 +17,10 @@ def save_library(data):
     Saves the library to MongoDB.
     """
     try:
-        return database.mongo_save_library(data)
+        print("DEBUG: Calling database.mongo_save_library")
+        result = database.mongo_save_library(data)
+        print(f"DEBUG: database.mongo_save_library returned {result}")
+        return result
     except Exception as e:
         print(f"MongoDB save failed: {e}")
         return False

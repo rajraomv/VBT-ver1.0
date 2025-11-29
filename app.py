@@ -5,10 +5,7 @@ from datetime import datetime
 from functools import wraps
 from storage import load_library, get_book, save_library
 from manage import add_book_logic, refresh_book_logic, delete_book_logic
-import smtplib
-import ssl
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
+
 from dotenv import load_dotenv
 
 load_dotenv()  # Load environment variables from .env file
@@ -41,7 +38,6 @@ def login():
 def logout():
     session.pop('logged_in', None)
     return redirect(url_for('landing_view'))
-
 @app.route('/')
 def landing_view():
     return render_template('landing.html')
@@ -248,41 +244,11 @@ def handle_contact():
     except Exception as e:
         print(f"Error saving log file: {e}", file=sys.stderr)
 
-    # 4. Attempt to send email
-    if send_email(subject, body):
-        flash('Your message has been sent successfully!', 'success')
-    else:
-        flash('Thank you! We have received your message and will respond soon.', 'success')
+    flash('Thank you! We have received your message and will respond soon.', 'success')
 
     return redirect(url_for('contact_view'))
 
-def send_email(subject, body):
-    sender_email = os.environ.get('MAIL_USERNAME')
-    receiver_email = "tellitaudio@gmail.com"
-    password = os.environ.get('MAIL_PASSWORD')
-    smtp_server = os.environ.get('MAIL_SERVER', 'smtp.gmail.com')
-    smtp_port = int(os.environ.get('MAIL_PORT', 587))
 
-    if not sender_email or not password:
-        print("Email configuration missing.")
-        return False
-
-    message = MIMEMultipart()
-    message["From"] = sender_email
-    message["To"] = receiver_email
-    message["Subject"] = subject
-    message.attach(MIMEText(body, "plain"))
-
-    try:
-        context = ssl.create_default_context()
-        with smtplib.SMTP(smtp_server, smtp_port) as server:
-            server.starttls(context=context)
-            server.login(sender_email, password)
-            server.sendmail(sender_email, receiver_email, message.as_string())
-        return True
-    except Exception as e:
-        print(f"Error sending email: {e}")
-        return False
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5001))
