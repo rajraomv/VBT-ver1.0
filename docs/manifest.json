@@ -1,0 +1,21 @@
+{
+    "name": "Tel-Lit Video Books",
+    "short_name": "Video Books",
+    "start_url": "./index.html",
+    "display": "standalone",
+    "background_color": "#000000",
+    "theme_color": "#FFD700",
+    "description": "A Divine Library of Telugu Literature Video Books",
+    "icons": [
+        {
+            "src": "images/logo.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "images/logo.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}
