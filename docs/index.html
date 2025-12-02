@@ -156,7 +156,6 @@
 
         <!-- Smart Launcher Buttons -->
         <button id="install-btn" class="action-btn">Install This App</button>
-        <button id="enter-btn" class="action-btn">Enter Library</button>
 
         <!-- iOS Instructions -->
         <div id="ios-msg" class="ios-msg">
@@ -180,7 +179,6 @@
         const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
 
         const installBtn = document.getElementById('install-btn');
-        const enterBtn = document.getElementById('enter-btn');
         const statusDiv = document.getElementById('status');
         const loader = document.querySelector('.loader');
         const iosMsg = document.getElementById('ios-msg');
@@ -260,16 +258,10 @@
                 // Hide loader
                 loader.style.display = 'none';
 
-                if (isStandalone) {
-                    // APP MODE: Show Enter Button, No Auto-Redirect
-                    enterBtn.style.display = 'inline-block';
-                    enterBtn.onclick = () => window.location.href = RENDER_URL;
-                } else {
-                    // WEB MODE: Auto-Redirect (Timer behavior)
-                    setTimeout(() => {
-                        window.location.href = RENDER_URL;
-                    }, 1500);
-                }
+                // UNIVERSAL AUTO-REDIRECT (App & Web)
+                setTimeout(() => {
+                    window.location.href = RENDER_URL;
+                }, 1500);
             }, 500);
         }
 
