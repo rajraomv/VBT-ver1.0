@@ -34,6 +34,9 @@
             box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
             max-width: 500px;
             width: 90%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .logo {
@@ -74,6 +77,33 @@
             font-style: italic;
             transition: opacity 0.5s ease-in-out;
             min-height: 1.5em;
+            margin-bottom: 20px;
+        }
+
+        /* Smart Launcher Buttons */
+        .action-btn {
+            background-color: white;
+            color: #DAA520;
+            /* Dark Goldenrod */
+            font-family: 'Outfit', sans-serif;
+            font-weight: bold;
+            font-style: italic;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-size: 1.1em;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s, box-shadow 0.2s, opacity 0.5s;
+            text-decoration: none;
+            display: none;
+            /* Hidden by default */
+            margin-top: 10px;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
         }
 
         @keyframes float {
@@ -93,6 +123,25 @@
                 transform: rotate(360deg);
             }
         }
+
+        /* iOS Install Message */
+        .ios-msg {
+            display: none;
+            background: rgba(255, 255, 255, 0.95);
+            /* High contrast white */
+            color: #b8860b;
+            /* Dark Goldenrod text */
+            padding: 15px;
+            border-radius: 15px;
+            margin-top: 20px;
+            font-size: 1em;
+            font-weight: 600;
+            max-width: 80%;
+            border: 2px solid #FFD700;
+            /* Gold border */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            animation: float 4s ease-in-out infinite;
+        }
     </style>
 </head>
 
@@ -104,6 +153,17 @@
 
         <div class="loader"></div>
         <div class="status-text" id="status">Waking up the library...</div>
+
+        <!-- Smart Launcher Buttons -->
+        <button id="install-btn" class="action-btn">Install This App</button>
+        <button id="enter-btn" class="action-btn">Enter Library</button>
+
+        <!-- iOS Instructions -->
+        <div id="ios-msg" class="ios-msg">
+            To install on iPhone/iPad:<br>
+            Tap the <strong>Share</strong> button <span style="font-size:1.2em">⬆️</span><br>
+            and select <strong>"Add to Home Screen"</strong> <span style="font-size:1.2em">➕</span>
+        </div>
     </div>
 
     <script>
@@ -111,10 +171,39 @@
         // CONFIGURATION
         // ---------------------------------------------------------
         const RENDER_URL = "https://vbt-ver1-0.onrender.com/";
-        // We check for a specific asset that only exists when the app is fully running
         const PING_ASSET = "static/images/logo.png";
-        const MIN_LOADING_TIME = 8000; // 8 seconds minimum show time (Increased for visibility)
+        const MIN_LOADING_TIME = 12000; // 12 seconds
         // ---------------------------------------------------------
+
+        // 1. Detect Mode
+        const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+        const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+        const installBtn = document.getElementById('install-btn');
+        const enterBtn = document.getElementById('enter-btn');
+        const statusDiv = document.getElementById('status');
+        const loader = document.querySelector('.loader');
+        const iosMsg = document.getElementById('ios-msg');
+
+        // PWA Install Prompt Logic
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            // Only show install button if NOT in standalone mode
+            if (!isStandalone) {
+                installBtn.style.display = 'inline-block';
+            }
+        });
+
+        installBtn.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                console.log(`User response to the install prompt: ${outcome}`);
+                deferredPrompt = null;
+            }
+        });
 
         const messages = [
             "Lighting the lamps of knowledge... 🪔",
@@ -125,63 +214,66 @@
         ];
 
         let msgIndex = 0;
-        const statusDiv = document.getElementById('status');
         let intervalId;
         let startTime = Date.now();
 
-        // 1. Start Rotating Messages
+        // 2. Start Rotating Messages
         intervalId = setInterval(() => {
-            statusDiv.style.opacity = '0'; // Fade out
+            statusDiv.style.opacity = '0';
             setTimeout(() => {
                 msgIndex = (msgIndex + 1) % messages.length;
                 statusDiv.innerText = messages[msgIndex];
-                statusDiv.style.opacity = '1'; // Fade in
+                statusDiv.style.opacity = '1';
             }, 500);
         }, 2500);
 
-        // 2. Image Ping Function
+        // 3. Image Ping Function
         function checkServer() {
-            // Enforce minimum loading time
             const elapsed = Date.now() - startTime;
             if (elapsed < MIN_LOADING_TIME) {
                 setTimeout(checkServer, 1000);
                 return;
             }
 
-            // Try to load the logo image from the live server
-            // We add a random query param to prevent caching
             const img = new Image();
             img.onload = function () {
-                // If image loads, server is definitely UP and serving files!
                 handleSuccess();
             };
             img.onerror = function () {
-                // If image fails, server is down or starting up. Retry.
-                console.log("Server not ready yet (Image check failed), retrying...");
+                console.log("Server not ready yet, retrying...");
                 setTimeout(checkServer, 2000);
             };
             img.src = RENDER_URL + PING_ASSET + "?t=" + Date.now();
         }
 
-        // 3. Success Handler
+        // 4. Success Handler
         function handleSuccess() {
-            clearInterval(intervalId); // Stop rotating messages
+            clearInterval(intervalId);
 
             statusDiv.style.opacity = '0';
             setTimeout(() => {
-                statusDiv.innerText = "Library Found! Entering...";
+                statusDiv.innerText = "Library is Ready!";
                 statusDiv.style.color = "#10b981"; // Green
                 statusDiv.style.fontWeight = "bold";
                 statusDiv.style.opacity = '1';
 
-                // Redirect after a brief pause to let user see the success message
-                setTimeout(() => {
-                    window.location.href = RENDER_URL;
-                }, 1500);
+                // Hide loader
+                loader.style.display = 'none';
+
+                if (isStandalone) {
+                    // APP MODE: Show Enter Button, No Auto-Redirect
+                    enterBtn.style.display = 'inline-block';
+                    enterBtn.onclick = () => window.location.href = RENDER_URL;
+                } else {
+                    // WEB MODE: Auto-Redirect (Timer behavior)
+                    setTimeout(() => {
+                        window.location.href = RENDER_URL;
+                    }, 1500);
+                }
             }, 500);
         }
 
-        // Start the process
+        // Start
         checkServer();
     </script>
 </body>
